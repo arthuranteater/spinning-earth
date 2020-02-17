@@ -13,6 +13,9 @@
 
             //selectors
             const button = document.querySelector('#pause')
+            const input = document.querySelector('#input')
+            const form = document.querySelector('#form')
+            const submit = document.querySelector('#submit')
 
             //create earth
             earth = new WE.map('earth_div');
@@ -35,6 +38,13 @@
                 requestAnimationFrame(animate);
             }
             requestAnimationFrame(animate)
+
+            submit.addEventListener('click', function (e) {
+                e.preventDefault()
+                console.log('input', input.value)
+                var marker = WE.marker([input.value, -0.09]).addTo(earth);
+                marker.bindPopup("<b>Hello world!</b><br>I am a popup.<br /><span style='font-size:10px;color:#999'>Tip: Another popup is hidden in Cairo..</span>", { maxWidth: 150, closeButton: true }).openPopup();
+            })
 
             //pause and start
             button.addEventListener("click", function (e) {
@@ -59,6 +69,10 @@
             margin: 0;
         }
 
+        #container {
+            display: block;
+        }
+
         #pause {
             color: white;
             background-color: blue;
@@ -68,23 +82,30 @@
             background-image: url('http://getwallpapers.com/wallpaper/full/4/c/c/29997.jpg');
             /* background-color: black; */
             max-width: auto;
-            max-height: 300px;
+            max-height: 500px;
             margin: auto;
             margin-top: 0px;
             top: 0;
             right: 0;
             bottom: 0;
             left: 0;
-            position: absolute !important;
+            /* position: relative; */
+            /* position: absolute !important; */
         }
     </style>
     <title>WebGL Earth API v2: Animation</title>
 </head>
 
 <body onload="initialize()">
-    <div id="earth_div">
-        <button id='pause'>Pause</button>
+    <div id='container'>
+        <div id="earth_div">
+            <button id='pause'>Pause</button>
+        </div>
     </div>
+    <form id='form'>
+        <input id='input' type="text" required>
+        <input id='submit' type="submit" value='Add Marker'>
+    </form>
 
 </body>
 
