@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script src="http://www.webglearth.com/v2/api.js"></script>
+    <script>
+
+        //globals
+        let spin = true
+        var earth
+
+        function initialize() {
+
+            //selectors
+            const button = document.querySelector('#pause')
+
+            //create earth
+            earth = new WE.map('earth_div');
+            earth.setView([46.8011, 8.2266], 3);
+            WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(earth)
+
+            //start spin
+            var before = null;
+
+            function animate(now) {
+                if (!spin) {
+                    return
+                }
+                var c = earth.getPosition();
+                var elapsed = before ? now - before : 0;
+                before = now;
+                earth.setCenter([c[0], c[1] + 0.1 * (elapsed / 30)]);
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate)
+
+            //pause and start
+            button.addEventListener("click", function (e) {
+                e.preventDefault()
+                spin = !spin
+                if (spin) {
+                    button.innerHTML = 'Pause'
+                    requestAnimationFrame(animate)
+                } else {
+                    button.innerHTML = 'Start'
+                }
+
+            })
+        }
+
+    </script>
+    <style>
+        html,
+        body {
+            background-color: whitesmoke;
+            padding: 0;
+            margin: 0;
+        }
+
+        #pause {
+            color: white;
+            background-color: blue;
+        }
+
+        #earth_div {
+            background-image: url('http://getwallpapers.com/wallpaper/full/4/c/c/29997.jpg');
+            /* background-color: black; */
+            max-width: auto;
+            max-height: 300px;
+            margin: auto;
+            margin-top: 0px;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            position: absolute !important;
+        }
+    </style>
+    <title>WebGL Earth API v2: Animation</title>
+</head>
+
+<body onload="initialize()">
+    <div id="earth_div">
+        <button id='pause'>Pause</button>
+    </div>
+
+</body>
+
+</html>
